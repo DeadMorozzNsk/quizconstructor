@@ -11,8 +11,10 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "question_id")
-    private int questionId;
+    @ManyToOne(optional = false,
+            fetch = FetchType.EAGER)
+    @JoinColumn(name = "question_id", referencedColumnName = "id")
+    private Question question;
     @Column(name = "answer_text")
     private String text;
     @Column(name = "correct")
