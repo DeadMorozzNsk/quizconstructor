@@ -3,3 +3,4 @@ target/
 .mvn/
 .idea/
 mvnv
+/database/h2main.db.trace.db
