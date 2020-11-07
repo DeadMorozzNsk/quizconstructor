@@ -37,4 +37,15 @@ public class QuizController {
         return quizRepo.save(quiz);
     }
 
+    @DeleteMapping(params = {"id"})
+    public void deleteQuiz(@RequestBody Quiz quiz){
+        Quiz q = quizRepo.getOne(quiz.getId());
+        quizRepo.delete(q);
+    }
+
+    @DeleteMapping
+    public void deleteQuizById(@RequestParam(name = "id") Integer id){
+        quizRepo.deleteById(id);
+    }
+
 }

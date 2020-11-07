@@ -1,5 +1,7 @@
 package com.opencode.quizconstructor.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,9 @@ import javax.persistence.*;
 @Table(name = "usr")
 @Data
 @NoArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class WebUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +28,7 @@ public class WebUser {
         this.role = role;//.ordinal();
     }
 
-//    public WebUser(String username, String password, UserRole role) {
-//        this(username, password, role.ordinal());
-//    }
+    public WebUser(String username, String password, UserRole role) {
+        this(username, password, role.ordinal());
+    }
 }
