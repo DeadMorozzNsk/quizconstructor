@@ -17,9 +17,13 @@ public class WebUser {
     private String password;
     private int role;
 
-    public WebUser(String username, String password, UserRole role) {
+    public WebUser(String username, String password, int role) {
         this.username = username;
         this.password = password;
-        this.role = role.ordinal();
+        this.role = role;//.ordinal();
     }
+
+//    public WebUser(String username, String password, UserRole role) {
+//        this(username, password, role.ordinal());
+//    }
 }

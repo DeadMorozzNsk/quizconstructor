@@ -1,5 +1,7 @@
 package com.opencode.quizconstructor.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,9 @@ import java.util.List;
 @Data
 @Table(name = "questions")
 @NoArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +27,20 @@ public class Question {
     @Column(name = "question_type")
     private int questionType;
 
-    @OneToMany
-    @JoinColumn(name = "question_id")
+    @OneToMany(mappedBy = "question",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
     List<Answer> answers;
 
-    public Question(Quiz quiz, String text, QuestionChoiseType questionType) {
+    public Question(Quiz quiz, String text, int questionType, List<Answer> answers) {
         this.quiz = quiz;
         this.text = text;
-        this.questionType = questionType.ordinal();
+        this.questionType = questionType;
+        this.answers = answers;
     }
+
+//    public Question(Quiz quiz, String text, QuestionChoiseType questionType, List<Answer> answers) {
+//        this(quiz, text, questionType.ordinal(), answers);
+//    }
 }
