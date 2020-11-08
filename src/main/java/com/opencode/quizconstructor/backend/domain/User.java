@@ -9,21 +9,18 @@ import javax.persistence.*;
 @Table(name = "usr")
 @Data
 @NoArgsConstructor
-public class WebUser {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String username;
     private String password;
-    private int role;
+    @Enumerated(EnumType.ORDINAL)
+    private UserRole role;
 
-    public WebUser(String username, String password, int role) {
+    public User(String username, String password, UserRole role) {
         this.username = username;
         this.password = password;
-        this.role = role;//.ordinal();
+        this.role = role;
     }
-
-//    public WebUser(String username, String password, UserRole role) {
-//        this(username, password, role.ordinal());
-//    }
 }
