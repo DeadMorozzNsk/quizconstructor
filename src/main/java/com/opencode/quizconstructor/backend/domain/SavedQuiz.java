@@ -8,27 +8,18 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "usr")
 @Data
+@Table(name = "saved")
 @NoArgsConstructor
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class WebUser {
+public class SavedQuiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String username;
-    private String password;
-    private int role;
 
-    public WebUser(String username, String password, int role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;//.ordinal();
-    }
-
-    public WebUser(String username, String password, UserRole role) {
-        this(username, password, role.ordinal());
-    }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

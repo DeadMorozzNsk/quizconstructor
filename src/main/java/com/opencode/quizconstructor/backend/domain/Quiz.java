@@ -22,8 +22,8 @@ public class Quiz {
     private String name;
     @ManyToOne(cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id", referencedColumnName = "id")
-    private WebUser author;
+    @JoinColumn(name = "author_id")
+    private User author;
 
     @OneToMany(mappedBy = "quiz",
             orphanRemoval = true,
@@ -31,7 +31,7 @@ public class Quiz {
             fetch = FetchType.EAGER)
     private List<Question> questions;
 
-    public Quiz(String name, WebUser author, List<Question> questions) {
+    public Quiz(String name, User author, List<Question> questions) {
         this.name = name;
         this.author = author;
         this.questions = questions;

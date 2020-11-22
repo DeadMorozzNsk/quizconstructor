@@ -1,5 +1,7 @@
 package com.opencode.quizconstructor.backend.controllers.rest.v1;
 
+import com.opencode.quizconstructor.backend.domain.Answer;
+import com.opencode.quizconstructor.backend.domain.Question;
 import com.opencode.quizconstructor.backend.domain.Quiz;
 import com.opencode.quizconstructor.backend.repositories.AnswerRepo;
 import com.opencode.quizconstructor.backend.repositories.QuestionRepo;
@@ -27,25 +29,28 @@ public class QuizController {
         this.answerRepo = answerRepo;
     }
 
-    @GetMapping
+    @GetMapping("/all")
+    //@CrossOrigin(origins = "http://localhost:8080")
     public List<Quiz> getAll() {
         return quizRepo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/add_quiz")
+    //@CrossOrigin(origins = "http://localhost:8080")
     public Quiz addQuiz(@RequestBody Quiz quiz) {
         return quizRepo.save(quiz);
     }
 
-    @DeleteMapping(params = {"id"})
-    public void deleteQuiz(@RequestBody Quiz quiz){
-        Quiz q = quizRepo.getOne(quiz.getId());
-        quizRepo.delete(q);
+    @PostMapping("/add_question")
+    public void addQuestionToQuiz(Quiz quiz,
+                                  @RequestBody Question question) {
+        quiz.getQuestions().add(question);
     }
 
-    @DeleteMapping
-    public void deleteQuizById(@RequestParam(name = "id") Integer id){
-        quizRepo.deleteById(id);
+    @PostMapping("/add_answer")
+    public void addAnswerToQuestion(Question question,
+                                    @RequestBody Answer answer){
+        question.getAnswers().add(answer);
     }
 
 }

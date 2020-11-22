@@ -25,7 +25,8 @@ public class Question {
     @Column(name = "question_text")
     private String text;
     @Column(name = "question_type")
-    private int questionType;
+    @Enumerated(EnumType.ORDINAL)
+    private QuestionChoiseType questionType;
 
     @OneToMany(mappedBy = "question",
             orphanRemoval = true,
@@ -33,14 +34,11 @@ public class Question {
             fetch = FetchType.EAGER)
     List<Answer> answers;
 
-    public Question(Quiz quiz, String text, int questionType, List<Answer> answers) {
+    public Question(Quiz quiz, String text,
+                    QuestionChoiseType questionType, List<Answer> answers) {
         this.quiz = quiz;
         this.text = text;
         this.questionType = questionType;
         this.answers = answers;
     }
-
-//    public Question(Quiz quiz, String text, QuestionChoiseType questionType, List<Answer> answers) {
-//        this(quiz, text, questionType.ordinal(), answers);
-//    }
 }
