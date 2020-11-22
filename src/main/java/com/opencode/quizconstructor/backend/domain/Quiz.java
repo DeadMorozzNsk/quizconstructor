@@ -22,7 +22,7 @@ public class Quiz {
     private String name;
     @ManyToOne(//cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    @JoinColumn(name = "author_id")
     private User author;
 
     @OneToMany(mappedBy = "quiz",
