@@ -26,8 +26,6 @@ create table USERS_ROLES
 (
     user_id integer not null,
     role_id integer not null,
-    constraint USERS_ROLES_PK
-        primary key (user_id),
     constraint USERS_ROLES_ROLES_ID_FK
         foreign key (role_id) references ROLES,
     constraint USERS_ROLES_USR_ID_FK
