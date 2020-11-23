@@ -4,3 +4,4 @@ target/
 .idea/
 mvnv
 /database/h2main.db.trace.db
+node_modules/
