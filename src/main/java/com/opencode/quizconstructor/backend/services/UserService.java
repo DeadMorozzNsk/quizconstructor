@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,9 +47,9 @@ public class UserService implements UserDetailsService {
             result = false;
         else
             newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-            newUser.setRoles(new ArrayList<>());
-            newUser.getRoles().add(roleRepo.findByName("ROLE_USER")); /* хардкод каждый новый юзер - не админ */
-            userRepo.save(newUser);
+        newUser.setRoles(new ArrayList<>());
+        newUser.getRoles().add(roleRepo.findByName("ROLE_USER")); /* хардкод каждый новый юзер - не админ */
+        userRepo.save(newUser);
         return result;
     }
 
@@ -75,4 +76,28 @@ public class UserService implements UserDetailsService {
                 new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
     }
+
+    public Collection<UserRole> getRolesListByRolesIds(int[] rolesIds) {
+        List<Integer> roles = new ArrayList<>();
+        for (int a :
+                rolesIds) {
+            roles.add(a);
+        }
+        return roleRepo.findAllByIdIn(roles);
+    }
+
+    public Collection<UserRole> setUserRoles(
+            int[] rolesIds,
+            Collection<UserRole> currentUserRoles
+    ) {
+        ArrayList<UserRole> rolesGranted = new ArrayList<>(currentUserRoles);
+        ArrayList<UserRole> rolesToAdd =
+                new ArrayList<>(getRolesListByRolesIds(rolesIds));
+        for (UserRole grantedRole : rolesGranted) {
+            if (!rolesToAdd.contains(grantedRole))
+                rolesToAdd.remove(grantedRole);
+        }
+        return rolesToAdd;
+    }
+
 }
