@@ -12,32 +12,42 @@
         </el-form-item>
 
       </div>
-      <quiz-question v-for="question in quizObj.questions"
-                     :key="question.id"
-                     :question-obj="question"
-                     :editable="editMode"
-                     :view-only-mode="viewOnlyMode"/>
+      <div class="questions-container">
+        <quiz-question v-for="(question, index) in quizObj.questions"
+                       :key="index"
+                       :question-obj="question"
+                       :editable="editMode"
+                       :view-only-mode="viewOnlyMode"
+                       :index="question_fk"
+                       @delete-question="deleteQuestion"
+                       @move-up-question="moveUpQuestion"
+                       @move-down-question="moveDownQuestion"/>
+      </div>
       <div v-if="editMode" class="add-question-panel">
         <el-button type="primary"
                    icon="el-icon-plus"
                    title="Добавить вопрос"
                    style="display: block; margin: 0 auto"
-                   @click="addQuestion"/>
+                   @click="addQuestion">Добавить вопрос
+        </el-button>
       </div>
       <div class="form-buttons-block" v-if="editMode">
         <div v-if="!isNew" style="display: table; margin: 0 auto">
           <el-button type="primary"
-                     @click="saveQuiz">Сохранить</el-button>
+                     @click="saveQuiz">Сохранить
+          </el-button>
           <el-button @click="cancelQuiz">Отмена</el-button>
         </div>
         <el-button v-else type="primary"
-                   @click="saveQuiz">Создать</el-button>
+                   @click="saveQuiz">Создать
+        </el-button>
       </div>
       <div class="form-buttons-block" v-else>
         <el-row>
           <el-col :span="20">
             <el-button type="primary"
-                       @click="answerQuiz">Завершить</el-button>
+                       @click="answerQuiz">Завершить
+            </el-button>
             <el-button @click="cancelQuiz">Отмена</el-button>
           </el-col>
           <el-col :span="4">
@@ -50,7 +60,8 @@
 </template>
 
 <script>
-import Question from "@/components/Question";
+import Question from "../components/Question";
+import {mapActions} from 'vuex'
 
 export default {
   name: "QuizEditArea",
@@ -76,6 +87,7 @@ export default {
   },
   data() {
     return {
+      question_fk: 0,
       localQuiz: {
         name: 'Новая анкета',
         author: 'SomeAdmin',
@@ -89,10 +101,63 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'updateQuizAction',
+      'addQuestionAction'
+    ]),
     addQuestion() {
-      alert('add question')
+      // console.log('quiz id=' + this.quizObj.id)
+      //this.addQuestionAction(this.quizObj.id)
+      const newQuestion = {
+        text: 'Новый вопрос',
+        quiz: this.quizObj.id,
+        position: this.quizObj.questions.length,
+        questionType: 'MULTIPLE',
+        answers: [],
+        foreignKey: 0 /* внешний ключ для удобства идентификации */
+      }
+      this.question_fk++
+      this.quizObj.questions.push(newQuestion)
+    },
+    deleteQuestion(questionId) {
+      const deleteIndex = this.getQuestionArrayIndex(questionId)
+      if (deleteIndex > -1) {
+        this.quizObj.questions.splice(deleteIndex, 1,)
+        this.refreshPositions()
+      } else
+        console.error('error while deleting question, wrong index.')
+    },
+    moveUpQuestion(questionId) {
+      const questions = this.quizObj.questions
+      const index = this.getQuestionArrayIndex(questionId)
+      if (index > 0 && index < questions.length) {
+        const temp = questions[index - 1]
+        questions[index - 1] = questions[index]
+        questions[index] = temp
+        this.refreshPositions()
+      }
+    },
+    moveDownQuestion(questionId) {
+      const questions = this.quizObj.questions
+      const index = this.getQuestionArrayIndex(questionId)
+      if (index >= 0 && index < questions.length - 1) {
+        const temp = questions[index + 1]
+        questions[index + 1] = questions[index]
+        questions[index] = temp
+        this.refreshPositions()
+      }
+    },
+    getQuestionArrayIndex(questionId) {
+      return this.quizObj.questions.findIndex(item => item.foreignKey === questionId)
+    },
+    refreshPositions() {
+      const questions = this.quizObj.questions
+      for (let i = 0; i < questions.length; i++) {
+        questions[i].position = i
+      }
     },
     saveQuiz(quiz) {
+      this.updateQuizAction(this.quizObj)
       this.$emit('save-quiz', quiz)
     },
     saveSolveProgress(quiz) {

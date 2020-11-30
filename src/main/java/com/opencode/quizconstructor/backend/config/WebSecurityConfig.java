@@ -8,44 +8,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
+//    private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
     private UserService userService;
-    private DataSource dataSource;
+//    private DataSource dataSource;
 
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+//    @Autowired
+//    public void setDataSource(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//    }
 
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.cors().configurationSource(new CorsConfigurationSource() {
-//            @Override
-//            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-//                return new CorsConfiguration().applyPermitDefaultValues();
-//            }
-//        });
+        httpSecurity
+            .cors().configurationSource(new CorsConfigurationSource() {
+                @Override
+                public CorsConfiguration getCorsConfiguration(HttpServletRequest httpServletRequest) {
+                    return new CorsConfiguration().applyPermitDefaultValues();
+            }
+        });
+
         httpSecurity
                 .authorizeRequests()
-                    .antMatchers("/", "/registration").permitAll()
+                    .antMatchers("/", "/registration", "/quiz/**").permitAll()
+                    .mvcMatchers("/quiz/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()//.defaultSuccessUrl("/home")

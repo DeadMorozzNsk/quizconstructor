@@ -26,6 +26,5 @@ public class SavedQuiz {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonView(JsonViewConfig.FullObject.class)
-    @JsonIdentityReference(alwaysAsId = true)
     private User user;
 }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.TreeSet;
 
 @Service
 public class QuizService {
@@ -29,7 +31,7 @@ public class QuizService {
         this.userRepo = userRepo;
     }
 
-    public void addQuestionToQuiz(Quiz quiz, Question question) {
+    public Quiz addQuestionToQuiz(Quiz quiz, Question question) {
         Quiz quizFromDb = quizRepo.findById(quiz.getId());
         if (quizFromDb == null) {
             quizFromDb = new Quiz();
@@ -42,7 +44,7 @@ public class QuizService {
                 quizFromDb.getQuestions().add(question);
             }
         }
-        quizRepo.save(quizFromDb);
+        return quizRepo.save(quizFromDb);
     }
 
     public void deleteQuestion(Question question) {

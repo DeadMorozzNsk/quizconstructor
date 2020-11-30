@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.opencode.quizconstructor.backend.config.JsonViewConfig;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -12,6 +14,8 @@ import java.util.Collection;
 @Entity
 @Table(name = "usr")
 @Data
+@ToString(of = {"id", "username"})
+@EqualsAndHashCode(of = {"id"})
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")

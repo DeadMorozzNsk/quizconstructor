@@ -17,5 +17,8 @@ public final class JsonViewConfig {
      */
     public interface FullObject extends IdName { }
 
-
+    /**
+     * Служит для маркировки полей вывода JSON "Настраиваемый вывод".
+     */
+    public interface CustomView { }
 }

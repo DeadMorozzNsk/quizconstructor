@@ -2,7 +2,6 @@ package com.opencode.quizconstructor.backend.controllers.rest.v1;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.opencode.quizconstructor.backend.config.JsonViewConfig;
-import com.opencode.quizconstructor.backend.domain.Answer;
 import com.opencode.quizconstructor.backend.domain.Question;
 import com.opencode.quizconstructor.backend.domain.Quiz;
 import com.opencode.quizconstructor.backend.repositories.QuizRepo;
@@ -32,6 +31,12 @@ public class QuizController {
         return quizRepo.findAll();
     }
 
+    @GetMapping("/all/simplified")
+    @JsonView(JsonViewConfig.CustomView.class)
+    public List<Quiz> getAllTableView() {
+        return quizRepo.findAll();
+    }
+
     @PostMapping("/add_quiz")
     //@CrossOrigin(origins = "http://localhost:8080")
     public Quiz addQuiz(@RequestBody Quiz quiz) {
@@ -46,23 +51,22 @@ public class QuizController {
 
     @PostMapping("{id}/add_question")
     @JsonView(JsonViewConfig.FullObject.class)
-    public void addQuestionToQuiz(@PathVariable("id") Quiz quiz,
+    public Quiz addQuestionToQuiz(@PathVariable("id") Quiz quiz,
             @RequestBody Question question) {
-//        quiz.getQuestions().add(question);
-        quizService.addQuestionToQuiz(quiz, question);
+        return quizService.addQuestionToQuiz(quiz, question);
     }
 
     @PutMapping("{id}/delete_question/{qid}")
-    public void deleteQuestionFromQuiz(@PathVariable("id") Quiz quiz,
+    public Quiz deleteQuestionFromQuiz(@PathVariable("id") Quiz quiz,
                                        @PathVariable("qid") Question question) {
         quiz.getQuestions().remove(question);
-        quizRepo.save(quiz);
+        return quizRepo.save(quiz);
     }
 
     @PutMapping("{id}")
-    public void editQuiz(@PathVariable("id") Quiz quizFromDb, @RequestBody Quiz quiz) {
+    public Quiz editQuiz(@PathVariable("id") Quiz quizFromDb, @RequestBody Quiz quiz) {
         BeanUtils.copyProperties(quiz, quizFromDb, "id");
-        quizRepo.save(quiz);
+        return quizRepo.save(quiz);
     }
 
     @DeleteMapping("{id}")

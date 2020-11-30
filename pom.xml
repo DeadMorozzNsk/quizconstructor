@@ -84,6 +84,7 @@
     </dependencies>
 
     <build>
+        <finalName>quiz constructor</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -102,7 +103,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <workingDirectory>src/frontend</workingDirectory>
+                            <workingDirectory>src/quizfront</workingDirectory>
                             <executable>npm</executable>
                             <arguments>
                                 <argument>run</argument>
@@ -128,7 +129,7 @@
                             <outputDirectory>target/classes/static</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/frontend/dist</directory>
+                                    <directory>src/quizfront/dist</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>

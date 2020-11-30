@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-//    @JsonView(JsonViewConfig.FullObject.class)
+    @JsonView(JsonViewConfig.FullObject.class)
     public User getOne(@PathVariable("id") User user) {
         return user;
     }

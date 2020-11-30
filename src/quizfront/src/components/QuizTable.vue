@@ -1,12 +1,12 @@
 <template>
   <div class="quiz-tab" v-if="visible" :style="'width:' + width">
-    <el-table :data="tableData" style="width: 100%" :height="height" :border="true">
+    <el-table :data="quizList" style="width: 100%" :height="height" :border="true">
       <el-table-column prop="date" label="Дата создания" width="170" header-align="center"></el-table-column>
       <el-table-column prop="name" label="Название" width="250" header-align="center"></el-table-column>
-      <el-table-column prop="author.username" label="Автор" width="150" header-align="center"></el-table-column>
-      <el-table-column prop="questions.length" label="Количество вопросов" width="110" align="center"></el-table-column>
+      <el-table-column prop="authorName" label="Автор" width="150" header-align="center"></el-table-column>
+      <el-table-column prop="questionsCount" label="Количество вопросов" width="110" align="center"></el-table-column>
       <el-table-column fixed="right" label="Действия" width="170" header-align="center">
-        <template slot-scope="scope" >
+        <template slot-scope="scope">
           <div v-if="isAdmin">
             <el-button @click="editClick(scope.$index)" type="text" size="small">Редактировать</el-button>
             <el-button @click="deleteClick(scope.$index)" type="text" size="small">Удалить</el-button>
@@ -20,15 +20,18 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+import {mapActions} from 'vuex'
+
 export default {
   name: "QuizTable",
   props: {
-    tableData: {
-      type: Array,
-      default: function () {
-       return []
-      }
-    },
+    // tableData: {
+    //   type: Array,
+    //   default: function () {
+    //    return []
+    //   }
+    // },
     visible: {
       type: Boolean,
       default: false
@@ -46,8 +49,18 @@ export default {
       default: "700px"
     }
   },
+  computed: {
+    ...mapState([
+      'quizList'
+    ])
+  },
   methods: {
-    editClick: function (index) {
+    ...mapActions([
+      'downloadQuizData'
+    ]),
+    editClick: async function (index) {
+      if (this.quizList[index].questions === undefined)
+        await this.downloadQuizData(this.quizList[index].id);
       this.$emit('edit-click', index)
     },
     deleteClick: function (index) {

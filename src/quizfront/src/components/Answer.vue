@@ -4,7 +4,7 @@
           :radioItemId="radioItemId">
   <div>
     <!-- Если тип ответа - только один вариант -->
-    <div v-if="questionType === 0">
+    <div v-if="questionType === 'SINGLE'">
       <div class="a-label" @click.prevent="divRadioClick">
         <el-row>
           <el-col :span="22">
@@ -30,7 +30,7 @@
       </div>
     </div>
     <!-- Если тип ответа - несколько вариантов -->
-    <div v-else-if="questionType === 1">
+    <div v-else-if="questionType === 'MULTIPLE'">
       <div class="a-label" @click.prevent="divCheckboxClick">
         <el-row>
           <el-col :span="22">
@@ -69,8 +69,8 @@ export default {
     },
     answerObj: Object,
     questionType: {
-      type: Number,
-      default: 0 //0- single answer, 1- multi answer
+      type: String,
+      default: 'SINGLE'
     },
     editable: {
       type: Boolean,
@@ -112,8 +112,8 @@ export default {
         this.answerChecked = !this.answerChecked
     },
     deleteItem() {
-      alert('delete')
-      this.$emit()
+      // console.log(this)
+      this.$emit('delete-answer', this.answerObj.foreignKey)
     },
     toggleInput(event) {
       if (this.isMouseOverButton && event.type === 'click' ||
@@ -122,6 +122,7 @@ export default {
         if (this.$refs.answerInput === undefined && this.answerEditMode) {
           this.$nextTick(() => {
             this.$refs.answerInput.focus()
+            this.$refs.answerInput.select()
           })
         }
       }

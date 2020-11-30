@@ -8,6 +8,7 @@ import com.opencode.quizconstructor.backend.services.QuizService;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class QuestionController {
 
     @GetMapping("/all")
     public List<Question> getAll() {
-        return questionRepo.findAll();
+        return questionRepo.findAll(Sort.by(Sort.Direction.ASC, "position"));
     }
 
     @PostMapping("{id}/add_answer")

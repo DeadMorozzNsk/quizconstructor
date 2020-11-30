@@ -17,13 +17,17 @@ import javax.persistence.Table;
 import javax.persistence.GenerationType;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @Table(name = "answers")
 @NoArgsConstructor
-@JsonIdentityInfo(
+@ToString(of = {"id", "text"})
+@EqualsAndHashCode(of = {"id"})
+@JsonIdentityInfo(scope = Answer.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class Answer {
@@ -44,12 +48,11 @@ public class Answer {
             fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id")//, referencedColumnName = "id")
     @JsonView(JsonViewConfig.FullObject.class)
-    @JsonIdentityReference(alwaysAsId = true)
     private Question question;
 
-    public Answer(Question question, String text, boolean isCorrect) {
-        this.question = question;
-        this.text = text;
-        this.isCorrect = isCorrect;
-    }
+//    public Answer(Question question, String text, boolean isCorrect) {
+//        this.question = question;
+//        this.text = text;
+//        this.isCorrect = isCorrect;
+//    }
 }
