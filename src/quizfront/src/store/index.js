@@ -17,6 +17,10 @@ export default new Vuex.Store({
             state.quizList = quizList;
         },
 
+        setUserObject(state, userObj) {
+          state.user = userObj
+        },
+
         addQuizMutation(state, quiz) {
             state.quizList = [
                 ...state.quizList,
@@ -56,10 +60,12 @@ export default new Vuex.Store({
             commit('setQuizList', result.data)
         },
 
+        async getUser({ commit }) {
+            const result = await quizApi.getUserInfo()
+            commit('setUserObject', result.data)
+        },
         async downloadQuizData({ commit }, quizID) {
             const result = await quizApi.getQuizById(quizID)
-            // console.log('updateData=' + result.data)
-            // console.log(result.data)
             commit('updateQuizMutation', result.data)
         },
 
@@ -76,7 +82,6 @@ export default new Vuex.Store({
 
         async updateQuizAction({commit, state}, quiz) {
             /*const result = */await quizApi.updateQuiz(quiz)
-            // console.log(result.data)
             const index = state.quizList.findIndex(item => item.id === quiz.id)
             if (index > -1)
                 commit('updateQuizMutation', quiz)

@@ -7,9 +7,12 @@ import com.opencode.quizconstructor.backend.repositories.UserRepo;
 import com.opencode.quizconstructor.backend.services.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -46,4 +49,12 @@ public class UserController {
         userRepo.save(user);
     }
 
+    @GetMapping("/self")
+    @JsonView(JsonViewConfig.FullObject.class)
+    public User getUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepo.findByUsername(username);
+//        return user;
+    }
 }

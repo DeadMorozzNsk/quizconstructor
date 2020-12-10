@@ -53,12 +53,12 @@ export default {
     //     return []
     //   }
     // },
-    userObj: {
-      type: Object,
-      default: function () {
-        return {name: '%username%', isAdmin: false}
-      }
-    }
+    // userObj: {
+    //   type: Object,
+    //   default: function () {
+    //     return {name: '%username%', isAdmin: false}
+    //   }
+    // }
   },
   components: {
     'quiz-table': QuizTable,
@@ -168,7 +168,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'quizList'
+      'quizList',
+      'user'
     ])
   },
   methods: {
@@ -235,7 +236,7 @@ export default {
     setCurrentQuizNew() {
       this.currentQuiz = {
         name: 'Новая анкета',
-        author: 'author #1',
+        author: this.user,
         questions: []
       }
     },

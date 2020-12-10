@@ -30,8 +30,6 @@ export default {
     },
     /* updates existing quiz in DB */
     updateQuiz: (quiz) => {
-        console.log('api reveived quiz')
-        console.log(quiz)
         return instance.put('quiz/' + quiz.id, quiz)
     },
     /* deletes quiz by ID */
@@ -44,5 +42,9 @@ export default {
         return instance.get('quiz/' + quizId)
     },
 
+    /* get user data */
+    getUserInfo: () => {
+        return instance.get('users/self')
+    }
 
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <admin-view v-if="user.isAdmin" :user-obj="user"></admin-view>
+    <admin-view v-if="isAdmin"></admin-view>
     <user-view :user-obj="user" v-else></user-view>
   </div>
 </template>
@@ -19,19 +19,28 @@ export default {
   data() {
     return {
       user: {
-        name: 'MegaUser',
-        isAdmin: true
+        id: 1,
+        username: 'admin',
+        roles: [
+          {
+            id: 3,
+            name: 'ROLE_ADMIN'
+          }
+        ],
       },
+      isAdmin: true,
       tabVisible: true,
     }
   },
   methods: {
     ...mapActions([
-      'receiveAllQuiz'
+      'receiveAllQuiz',
+      'getUser'
     ])
   },
   mounted: function () {
-    this.receiveAllQuiz();
+    this.receiveAllQuiz()
+    this.getUser()
   }
 }
 </script>

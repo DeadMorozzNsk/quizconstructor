@@ -160,6 +160,10 @@ export default {
       this.updateQuizAction(this.quizObj)
       this.$emit('save-quiz', quiz)
     },
+    saveNewQuiz(quiz) {
+      this.updateQuizAction(this.quizObj)
+      this.$emit('save-quiz', quiz)
+    },
     saveSolveProgress(quiz) {
       this.$emit('save-progress', quiz)
     },

@@ -5,8 +5,8 @@ import com.opencode.quizconstructor.backend.config.JsonViewConfig;
 import com.opencode.quizconstructor.backend.domain.Question;
 import com.opencode.quizconstructor.backend.domain.Quiz;
 import com.opencode.quizconstructor.backend.repositories.QuizRepo;
+import com.opencode.quizconstructor.backend.repositories.UserRepo;
 import com.opencode.quizconstructor.backend.services.QuizService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +17,13 @@ import java.util.List;
 public class QuizController {
     private final QuizRepo quizRepo;
     private final QuizService quizService;
+    private final UserRepo userRepo;
 
     @Autowired
-    public QuizController(QuizRepo quizRepo, QuizService quizService) {
+    public QuizController(QuizRepo quizRepo, QuizService quizService, UserRepo userRepo) {
         this.quizRepo = quizRepo;
         this.quizService = quizService;
+        this.userRepo = userRepo;
     }
 
     @GetMapping("/all")
@@ -52,7 +54,7 @@ public class QuizController {
     @PostMapping("{id}/add_question")
     @JsonView(JsonViewConfig.FullObject.class)
     public Quiz addQuestionToQuiz(@PathVariable("id") Quiz quiz,
-            @RequestBody Question question) {
+                                  @RequestBody Question question) {
         return quizService.addQuestionToQuiz(quiz, question);
     }
 
@@ -65,8 +67,9 @@ public class QuizController {
 
     @PutMapping("{id}")
     public Quiz editQuiz(@PathVariable("id") Quiz quizFromDb, @RequestBody Quiz quiz) {
-        BeanUtils.copyProperties(quiz, quizFromDb, "id");
-        return quizRepo.save(quiz);
+//        BeanUtils.copyProperties(quiz, quizFromDb, "id");
+        quizService.copyQuizProperties(quiz, quizFromDb);
+        return quizRepo.save(quizFromDb);
     }
 
     @DeleteMapping("{id}")
